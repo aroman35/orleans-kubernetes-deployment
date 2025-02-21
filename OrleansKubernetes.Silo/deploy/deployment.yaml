@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orleans-kubernetes-app
+  labels:
+    orleans/serviceId: orleans-kubernetes-app
+spec:
+  selector:
+    matchLabels:
+      orleans/serviceId: orleans-kubernetes-app
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        orleans/serviceId: orleans-kubernetes-app
+        orleans/clusterId: orleans-kubernetes-app
+    spec:
+      containers:
+        - name: main
+          image: my-registry.azurecr.io/my-image
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 11111
+            - containerPort: 30000
+          env:
+            - name: STORAGE_CONNECTION_STRING
+              value: "Server=rc1a-3p9x9kl95h86tgyh.mdb.yandexcloud.net;Port=6432;Database=orleans-kubernetes;User Id=alex;Password=Z10n0101N#;"
+            - name: ORLEANS_SERVICE_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['orleans/serviceId']
+            - name: ORLEANS_CLUSTER_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['orleans/clusterId']
+            - name: POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: DOTNET_SHUTDOWNTIMEOUTSECONDS
+              value: "120"
+          resources:
+            requests:
+              cpu: "125m"        # 1/8 CPU
+              memory: "128Mi"    # 128Mb
+            limits:
+              cpu: "500m"        # 1/2 CPU
+              memory: "512Mi"    # 512Mb
+      terminationGracePeriodSeconds: 180
+      imagePullSecrets:
+        - name: my-image-pull-secret
+  minReadySeconds: 60
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: orleans-kubernetes-app-hpa
+  # Убедитесь, что HPA создаётся в том же namespace, что и Deployment
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: orleans-kubernetes-app
+  minReplicas: 2
+  maxReplicas: 10   # Можно настроить по потребностям
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 50
