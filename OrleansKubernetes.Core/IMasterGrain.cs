@@ -1,5 +1,6 @@
 ﻿namespace OrleansKubernetes.Core;
 
-public class Class1
+public interface IMasterGrain : IGrainWithGuidKey
 {
+    Task SimulateSomeWork();
 }

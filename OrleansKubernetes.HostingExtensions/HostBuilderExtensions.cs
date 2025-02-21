@@ -1,6 +1,12 @@
-﻿namespace OrleansKubernetes.HostingExtensions;
+﻿using Microsoft.AspNetCore.Builder;
+using Serilog;
 
-public class HostBuilderExtensions
+namespace OrleansKubernetes.HostingExtensions;
+
+public static class HostBuilderExtensions
 {
-    
+    public static void AddSerilog(this WebApplicationBuilder builder)
+    {
+        builder.Host.UseSerilog((hostContext, logger) => logger.ReadFrom.Configuration(hostContext.Configuration));
+    }
 }

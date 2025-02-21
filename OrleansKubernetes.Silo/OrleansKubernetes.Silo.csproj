@@ -4,15 +4,24 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <ServerGarbageCollection>true</ServerGarbageCollection>
+        <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
+        <IsPublishable>true</IsPublishable>
+        <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:9.0</ContainerBaseImage>
+        <ContainerFamily>alpine</ContainerFamily>
+        <ContainerRuntimeIdentifier>linux-x64</ContainerRuntimeIdentifier>
+        <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\OrleansKubernetes.Grains\OrleansKubernetes.Grains.csproj" />
+      <ProjectReference Include="..\OrleansKubernetes.HostingExtensions\OrleansKubernetes.HostingExtensions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.2" />
       <PackageReference Include="Microsoft.Orleans.Server" Version="9.1.2" />
+      <PackageReference Include="OrleansDashboard" Version="8.2.0" />
+        <PackageReference Include="Microsoft.Orleans.Hosting.Kubernetes" Version="9.1.2" />
     </ItemGroup>
 
 </Project>

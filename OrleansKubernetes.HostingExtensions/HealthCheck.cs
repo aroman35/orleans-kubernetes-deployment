@@ -4,8 +4,8 @@ namespace OrleansKubernetes.HostingExtensions;
 
 public class HealthCheck : IHealthCheck
 {
-    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
+    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new())
     {
-        throw new NotImplementedException();
+        return Task.FromResult(HealthCheckResult.Healthy());
     }
 }

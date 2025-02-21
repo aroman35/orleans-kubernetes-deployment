@@ -4,14 +4,18 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <IsPublishable>true</IsPublishable>
+        <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
+        <ContainerWorkingDirectory>/bin</ContainerWorkingDirectory>
+        <ContainerRepository>orleans-kubernetes-worker</ContainerRepository>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\OrleansKubernetes.Core\OrleansKubernetes.Core.csproj" />
+      <ProjectReference Include="..\OrleansKubernetes.HostingExtensions\OrleansKubernetes.HostingExtensions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="9.0.2" />
       <PackageReference Include="Microsoft.Orleans.Client" Version="9.1.2" />
     </ItemGroup>
 
