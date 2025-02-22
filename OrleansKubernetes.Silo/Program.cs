@@ -1,15 +1,19 @@
+using Orleans.Clustering.Kubernetes;
 using OrleansDashboard;
 using OrleansKubernetes.HostingExtensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.UseOrleans(silo =>
 {
-    silo.UseAdoNetClustering(ado =>
+    if (builder.Environment.IsProduction() || builder.Environment.IsStaging())
     {
-        ado.ConnectionString = builder.Configuration.GetConnectionString("PgSql");
-        ado.Invariant = "Npgsql";
-    });
-    silo.UseKubernetesHosting();
+        silo.UseKubernetesHosting();
+        silo.UseKubeMembership();
+    }
+    else
+    {
+        silo.UseLocalhostClustering();
+    }
     silo.ConfigureLogging(logging => logging.AddConsole());
     silo.UseDashboard(dashboard =>
     {

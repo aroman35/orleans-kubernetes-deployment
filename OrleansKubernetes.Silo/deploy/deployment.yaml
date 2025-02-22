@@ -21,9 +21,10 @@ spec:
         orleans/serviceId: orleans-kubernetes-app
         orleans/clusterId: orleans-kubernetes-app
     spec:
+      serviceAccountName: orleans-sa
       containers:
         - name: silo
-          image: aroman35/orleans-kubernetes-silo:1.0.4
+          image: aroman35/orleans-kubernetes-silo:1.0.5
           imagePullPolicy: Always
           ports:
             - containerPort: 11111

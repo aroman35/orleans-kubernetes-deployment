@@ -17,6 +17,7 @@
 
     <ItemGroup>
       <PackageReference Include="Microsoft.Orleans.Client" Version="9.1.2" />
+      <PackageReference Include="Orleans.Clustering.Kubernetes" Version="8.2.0" />
     </ItemGroup>
 
 </Project>

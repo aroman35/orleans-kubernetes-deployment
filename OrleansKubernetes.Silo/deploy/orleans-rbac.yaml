@@ -1,0 +1,59 @@
+---
+# 1. Создание отдельного сервисного аккаунта
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: orleans-sa
+  namespace: orleans-testing
+---
+# 2. Role для доступа к кастомным ресурсам (CRD) с разрешением на создание
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: orleans-crd-access
+  namespace: orleans-testing
+rules:
+  - apiGroups: ["orleans.dot.net"]
+    resources: ["*"]
+    verbs: ["*"]
+---
+# 3. RoleBinding для CRD доступа
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: orleans-crd-access-binding
+  namespace: orleans-testing
+subjects:
+  - kind: ServiceAccount
+    name: orleans-sa
+    namespace: orleans-testing
+roleRef:
+  kind: Role
+  name: orleans-crd-access
+  apiGroup: rbac.authorization.k8s.io
+---
+# 4. Role для Kubernetes hosting (работа с pods)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: orleans-hosting
+  namespace: orleans-testing
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "watch", "list", "delete", "patch"]
+---
+# 5. RoleBinding для Kubernetes hosting
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: orleans-hosting-binding
+  namespace: orleans-testing
+subjects:
+  - kind: ServiceAccount
+    name: orleans-sa
+    namespace: orleans-testing
+roleRef:
+  kind: Role
+  name: orleans-hosting
+  apiGroup: rbac.authorization.k8s.io
