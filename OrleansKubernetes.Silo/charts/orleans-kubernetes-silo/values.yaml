@@ -1,0 +1,23 @@
+# Пространство имён для установки ресурсов (CRD не зависит от него)
+namespace: orleans-staging
+
+image:
+  repository: aroman35/orleans-kubernetes-silo
+  tag: 1.0.5
+
+# Порты приложения
+ports:
+  silo: 11111
+  gateway: 30000
+  http: 8080
+
+# Переменные окружения для приложения (значение ASPNETCORE_URLS можно формировать на основе http порта)
+env:
+  ASPNETCORE_URLS: "http://+:8080"
+  ASPNETCORE_ENVIRONMENT: "Production"
+  DOTNET_SHUTDOWNTIMEOUTSECONDS: "120"
+
+# Настройки Dashboard (будут закодированы в base64)
+dashboard:
+  username: admin
+  password: password123

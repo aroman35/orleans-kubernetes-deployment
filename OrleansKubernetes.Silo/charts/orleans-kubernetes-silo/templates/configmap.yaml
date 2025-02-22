@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: orleans-appsettings
+  namespace: {{ .Values.namespace }}
+data:
+  appsettings.json: |
+    {
+      "Serilog": {
+        "WriteTo": [
+          {
+            "Name": "Console",
+            "Args": {
+              "theme": "Serilog.Sinks.SystemConsole.Themes.AnsiConsoleTheme::Code, Serilog.Sinks.Console",
+              "outputTemplate": "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} <s:{SourceContext}>{NewLine}{Exception}"
+            }
+          }
+        ]
+      },
+      "AllowedHosts": "*",
+      "ConnectionStrings": {
+        "PgSql": ""
+      },
+      "DashboardOptions": {
+        "HideTrace": true,
+        "HostSelf": false,
+        "BasePath": "/dashboard",
+        "CounterUpdateIntervalMs": 3000,
+        "HistoryLength": 500
+      }
+    }

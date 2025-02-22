@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: orleans-kubernetes-app
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: orleans-kubernetes-app
+spec:
+  type: ClusterIP
+  ports:
+    - name: silo
+      port: {{ .Values.ports.silo }}
+      targetPort: {{ .Values.ports.silo }}
+    - name: gateway
+      port: {{ .Values.ports.gateway }}
+      targetPort: {{ .Values.ports.gateway }}
+    - name: http
+      port: {{ .Values.ports.http }}
+      targetPort: {{ .Values.ports.http }}
+  selector:
+    orleans/serviceId: orleans-kubernetes-app
